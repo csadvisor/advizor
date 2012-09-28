@@ -50,22 +50,24 @@ h.sendEmail = (headers, callback) ->
   config.smtp.send(message, callback)
 
 
-h.buildEmailBody = ({advisor, student, photoLink}) ->
+h.buildEmailBody = ({advisor, student}) ->
 
-  switch advisor.title
-    when 'professor' then salutation = "Dear Professor #{advisor.last},"
-    when 'lecturer'  then salutation = "Dear #{advisor.first},"
-    else salutation = "Dear #{advisor.first} #{advisor.last},"
+  salutation = switch advisor.title
+    when 'professor' then "Dear Professor #{advisor.last},"
+    when 'lecturer'  then "Dear #{advisor.first},"
+    else "Dear #{advisor.first} #{advisor.last},"
 
-  attachments_location = ''
-  attachments_location += "I'm attaching #{student.first}'s transcripts"
-  attachments_location += "and including a link to a photo below." if photoLink?
+  text =
+    """
+      #{student.first} #{student.last} is your new advisee. I'm attaching #{student.first}'s transcripts and photo.
 
-  signature = "Jack Dubie\nCS Course Advisor\nhttp://bit.ly/csadvisor"
-  photoLink = '' unless photoLink?
+      Jack Dubie
+      CS Course Advisor
+      http://bit.ly/csadvisor"
+    """
 
   # create email message
-  greeting + '\n' + new_advisee + attachments_location + '\n' + signature + photoLink
+  salutation + '\n' + text
 
 
 module.exports = h

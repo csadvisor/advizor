@@ -91,39 +91,41 @@ describe 'util/helpers', ->
         done()
 
       
-  describe '#sendEmail', ->
+        # This works but spammy
 
-    file = path.join(__dirname, 'f1')
+        #  describe '#sendEmail', ->
+        #
+        #    file = path.join(__dirname, 'f1')
+        #
+        #    before ->
+        #      fs.writeFileSync(file, 'hey imma file 1')
+        #
+        #    after ->
+        #      fs.unlinkSync(file)
+        #
+        #    it 'should not callback an error', (done) ->
+        #      headers =
+        #        to: 'jdubie2233@yahoo.com'
+        #        subject: 'unit test'
+        #        text: 'teeext'
+        #        attachment: [
+        #          { path: file, name: 'text.txt', type: 'application/text' }
+        #        ]
+        #      h.sendEmail(headers, done)
 
-    before ->
-      fs.writeFileSync(file, 'hey imma file 1')
+  describe '#buildEmailBody', ->
+    it 'should be formal with professors', ->
+      advisor = first: 'Mehran', last: 'Sahami', title: 'professor'
+      student = first: 'John'
+      body = h.buildEmailBody({advisor, student})
+      body.should.match /Professor/
 
-    after ->
-      fs.unlinkSync(file)
+    it 'should be cause with non-professors', ->
+      advisor = first: 'Mehran', last: 'Sahami', title: 'lecturer'
+      student = first: 'John'
+      body = h.buildEmailBody({advisor, student})
+      body.should.not.match /Professor/
 
-    it 'should not callback an error', (done) ->
-      headers =
-        to: 'jdubie2233@yahoo.com'
-        subject: 'unit test'
-        text: 'teeext'
-        attachment: [
-          { path: file, name: 'text.txt', type: 'application/text' }
-        ]
-      h.sendEmail(headers, done)
-
-      #h.sendEmail = (headers, callback) ->
-      #  defaults =
-      #    from    : 'Course Advisor <advisor@cs.stanford.edu>'
-      #    to      : 'Course Advisor <advisor@cs.stanford.edu>'
-      #    bcc     : 'csadvisor.bcc@gmail.com'
-      #    subject : 'test email'
-      #    text    : 'test text'
-      #  _.defaults(headers, defaults)
-      #
-      #  message = email.message.create(headers)
-      #  config.smtp.send(message, callback)
-      #
-      #
       #h.buildEmailBody = ({advisor, student, photoLink}) ->
       #
       #  switch advisor.title
