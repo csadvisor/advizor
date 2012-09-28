@@ -50,6 +50,7 @@ describe 'tasks', ->
 
     after ->
       fs.rmdirSync folder
+      fs.rmdirSync path.join(pwd, '..', '_photos')
 
     it 'should return false if less than 6 spots', (done) ->
       tasks.notifyMeredith {pwd}, (err, res) ->

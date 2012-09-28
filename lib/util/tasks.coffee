@@ -37,17 +37,24 @@ tasks.notifyMeredith = ({pwd}, callback) ->
     (number, next) ->
       next(null, number >= 6)
 
-    (shouldTar, next) ->
-      return next(null, shouldTar) unless shouldTar
 
-      # tar
-      #tar = child_process.spawn 'tar', ['cvzf','','cps10']
-      #tar.on 'exit', ->
+    (shouldPdf, next) ->
+      return next(null, shouldPdf) unless shouldPdf
+
+      # generate photo email
 
     (shouldEmail, next) ->
       return next(null, shouldEmail) unless shouldEmail
 
       # send meredith email
+
+    (shouldTar, next) ->
+      return next(null, shouldTar) unless shouldTar
+
+      # tar and archive old photos
+
+      #tar = child_process.spawn 'tar', ['cvzf','','cps10']
+      #tar.on 'exit', ->
 
   ], callback
 
