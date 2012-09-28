@@ -65,6 +65,8 @@ tasks.subscribeAnnounceList = ({student}, callback) ->
   headers =
     from    : "#{student.first} #{student.last} <#{student.email}>"
     to      : "cs-students-announce-subscribe@lists.stanford.edu"
+    text    : 'subscribing to cs-students-announce@lists.stanford.edu'
+    subject : 'subscribing to cs-students-announce'
   h.sendEmail(headers, callback)
 
 
