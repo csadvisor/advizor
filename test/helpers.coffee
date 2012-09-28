@@ -79,19 +79,18 @@ describe 'util/helpers', ->
       fs.writeFileSync path.join(dir, 'f1'), 'hey imma file 1'
       fs.writeFileSync path.join(dir, 'f2'), 'hey imma file 2'
 
+    after ->
+      fs.unlink path.join(dir, 'f1')
+      fs.unlink path.join(dir, 'f2')
+      fs.rmdirSync dir
+
     it 'should get the correct number of file', (done) ->
       h.numberOfFilesInDir {dir}, (err, res) ->
         should.not.exist(err)
         res.should.eql 2
         done()
 
-
-      #h.numberOfFilesInDir = ({dir}, callback) ->
-      #  fs.readdir dir, (err, stat) ->
-      #    return callback(err) if err
-      #    debug "#numberOfFilesInDir _pending photos size: #{stat.length}"
-      #    callback(null, stat.length)
-      #
+      
       #h.sendEmail = (headers, callback) ->
       #  defaults =
       #    from    : 'Course Advisor <advisor@cs.stanford.edu>'
