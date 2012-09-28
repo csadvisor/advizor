@@ -17,15 +17,16 @@
 #
 # 5. Add their name/portrait to the Course Advisor Facebook Page.
 #
+fs      = require 'fs'
+async   = require 'async'
+email   = require 'lib/email'
+h       = require 'lib/util/helpers'
+{spawn} = require 'child_process'
+debug   = require('debug')('lib/declare')
 
-
-fs    = require 'fs'
-child_process = require 'child_process'
-async = require 'async'
-email = require './email'
-h     = require './util/helpers'
-#exists = require './util/exists'
 
 declare = (opts, callback) ->
-  no_fb = opts.no_fb || false
+  noFb = opts.no_fb || false
+
+  debug 'noFb', noFb
 
