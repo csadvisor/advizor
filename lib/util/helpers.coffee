@@ -1,8 +1,10 @@
 debug = require('debug')('advizor/lib/util/helpers')
 fs = require('fs')
 path = require('path')
-child_process = require 'child_process'
-spawn = child_process.spawn
+_ = require('underscore')
+{spawn} = require('child_process')
+email = require('emailjs')
+config = require('config')
 
 h = {}
 

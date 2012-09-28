@@ -80,8 +80,8 @@ describe 'util/helpers', ->
       fs.writeFileSync path.join(dir, 'f2'), 'hey imma file 2'
 
     after ->
-      fs.unlink path.join(dir, 'f1')
-      fs.unlink path.join(dir, 'f2')
+      fs.unlinkSync path.join(dir, 'f1')
+      fs.unlinkSync path.join(dir, 'f2')
       fs.rmdirSync dir
 
     it 'should get the correct number of file', (done) ->
@@ -91,6 +91,26 @@ describe 'util/helpers', ->
         done()
 
       
+  describe '#sendEmail', ->
+
+    file = path.join(__dirname, 'f1')
+
+    before ->
+      fs.writeFileSync(file, 'hey imma file 1')
+
+    after ->
+      fs.unlinkSync(file)
+
+    it 'should not callback an error', (done) ->
+      headers =
+        to: 'jdubie2233@yahoo.com'
+        subject: 'unit test'
+        text: 'teeext'
+        attachment: [
+          { path: file, name: 'text.txt', type: 'application/text' }
+        ]
+      h.sendEmail(headers, done)
+
       #h.sendEmail = (headers, callback) ->
       #  defaults =
       #    from    : 'Course Advisor <advisor@cs.stanford.edu>'
