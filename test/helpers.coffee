@@ -1,8 +1,9 @@
-h = require('lib/util/helpers')
+h      = require('lib/util/helpers')
 should = require('should')
-fs = require('fs')
-path = require('path')
+fs     = require('fs')
+path   = require('path')
 mkdirp = require('mkdirp')
+async  = require('async')
 
 describe 'util/helpers', ->
   describe '#getInfo', ->
@@ -71,6 +72,24 @@ describe 'util/helpers', ->
     it 'shoud work', (done) ->
       h.mvFile({filename, dir, destDir, destFilename}, done)
 
+  describe '#cpFile', ->
+
+    filename = 'cp_src_test.txt'
+    dir = destDir =  __dirname
+    destFilename = 'cp_dst_test.txt'
+
+    before ->
+      fs.writeFileSync path.join(dir, filename), 'hwefwef'
+
+    after (done) ->
+      async.parallel [
+        (callback) -> h.rmFile({filename, dir}, callback)
+        (callback) -> h.rmFile({filename: destFilename, dir: destDir}, callback)
+      ], done
+
+    it 'shoud work', (done) ->
+      h.cpFile({filename, dir, destDir, destFilename}, done)
+
   describe '#numberOfFilesInDir', ->
     dir = path.join(__dirname, 'test_dir')
 
@@ -126,22 +145,5 @@ describe 'util/helpers', ->
       body = h.buildEmailBody({advisor, student})
       body.should.not.match /Professor/
 
-      #h.buildEmailBody = ({advisor, student, photoLink}) ->
-      #
-      #  switch advisor.title
-      #    when 'professor' then salutation = "Dear Professor #{advisor.last},"
-      #    when 'lecturer'  then salutation = "Dear #{advisor.first},"
-      #    else salutation = "Dear #{advisor.first} #{advisor.last},"
-      #
-      #  attachments_location = ''
-      #  attachments_location += "I'm attaching #{student.first}'s transcripts"
-      #  attachments_location += "and including a link to a photo below." if photoLink?
-      #
-      #  signature = "Jack Dubie\nCS Course Advisor\nhttp://bit.ly/csadvisor"
-      #  photoLink = '' unless photoLink?
-      #
-      #  # create email message
-      #  greeting + '\n' + new_advisee + attachments_location + '\n' + signature + photoLink
-      #
 
 module.exports = h

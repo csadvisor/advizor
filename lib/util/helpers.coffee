@@ -1,10 +1,11 @@
-debug = require('debug')('advizor/lib/util/helpers')
-fs = require('fs')
-path = require('path')
-_ = require('underscore')
+debug   = require('debug')('advizor/lib/util/helpers')
+fs      = require('fs')
+path    = require('path')
+_       = require('underscore')
 {spawn} = require('child_process')
-email = require('emailjs')
-config = require('config')
+email   = require('emailjs')
+config  = require('config')
+async   = require('async')
 
 h = {}
 
@@ -29,7 +30,17 @@ h.mvFile = ({filename, dir, destDir, destFilename}, callback) ->
   mv = spawn 'mv', [from, to]
   mv.on 'exit', (code) ->
     return callback() if code == 0
-    callback("mv exited with non-zero exit code: #{code}")
+
+h.cpFile = ({filename, dir, destDir, destFilename}, callback) ->
+  from = path.join(dir, filename)
+  to = path.join(destDir, destFilename)
+  debug '#mvFile (from, to)', from, to
+  destFilename ?= filename
+  cp = spawn 'cp', [from, to]
+  cp.on 'exit', (code) ->
+    return callback() if code == 0
+    callback("cp exited with non-zero exit code: #{code}")
+    callback("cp exited with non-zero exit code: #{code}")
 
 h.numberOfFilesInDir = ({dir}, callback) ->
   fs.readdir dir, (err, stat) ->
