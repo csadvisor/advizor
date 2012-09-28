@@ -5,7 +5,6 @@ _       = require('underscore')
 {spawn} = require('child_process')
 email   = require('emailjs')
 config  = require('config')
-async   = require('async')
 
 h = {}
 

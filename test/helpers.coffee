@@ -27,8 +27,7 @@ describe 'util/helpers', ->
 
     it 'should work', (done) ->
       h.getInfo __dirname, (err, info) ->
-        info.should.have.keys 'student', 'advisor', 'message'
-        console.error info
+        info.should.have.keys('student', 'advisor', 'message')
         done()
 
   describe '#writeJSON', ->

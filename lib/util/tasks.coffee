@@ -1,22 +1,23 @@
 async = require('async')
-path = require('path')
+path  = require('path')
+debug = require('debug')
+h     = require('lib/util/helpers')
+
 
 tasks = {}
 
 # Copy the student's picture from the camera to your computer.
 #
-tasks.movePhoto = (info,callback) ->
-  debug '#processPhoto', info
-
-  pwd = process.env.PWD
+tasks.archivePhoto = ({student, pwd}, callback) ->
+  debug '#archivePhoto student', student
 
   opts =
     filename    : 'photo.jpg'
     dir         : pwd
     destDir     : path.join(pwd, '..', '_photos', '_pending')
-    destFilename: "#{info.student.last}_#{info.student.first}.jpg"
+    destFilename: "#{student.last}_#{student.first}.jpg"
 
-  h.mvFile(opts, callback)
+  h.cpFile(opts, callback)
 
 
 # notifyMeredith
@@ -24,12 +25,12 @@ tasks.movePhoto = (info,callback) ->
 # Meredith's template currently has 6 spots, so send her photographs
 # in sets of 6 to be printed.
 #
-tasks.notifyMeredith = (callback) ->
+tasks.notifyMeredith = ({pwd}, callback) ->
 
   async.waterfall [
 
     (next) ->
-      pendingDir = path.join(dir, '..', '_photos', '_pending')
+      pendingDir = path.join(pwd, '..', '_photos', '_pending')
       debug '#notifyMeredith checking', pendingDir
       h.numberOfFilesInDir(dir: pendingDir, next)
 
@@ -37,18 +38,18 @@ tasks.notifyMeredith = (callback) ->
       next(null, number >= 6)
 
     (shouldTar, next) ->
-      return next(email) unless shouldTar
+      return next(null, shouldTar) unless shouldTar
 
       # tar
       #tar = child_process.spawn 'tar', ['cvzf','','cps10']
       #tar.on 'exit', ->
 
     (shouldEmail, next) ->
-      return next(email) unless shouldEmail
+      return next(null, shouldEmail) unless shouldEmail
 
       # send meredith email
 
-  ], (err, res) ->
+  ], callback
 
 
 # subscribeAnnounceList
@@ -68,7 +69,7 @@ tasks.subscribeAnnounceList = ({student}, callback) ->
 tasks.emailConnie = ({student}, callback) ->
   debug "** Task 4: Emailing Connie"
   
-  text = "#{info.student.first} #{info.student.last} [#{info.student.email}]"
+  text = "#{student.first} #{student.last} [#{student.email}]"
   headers =
      text    : text
      to      : "Connie Chan <cchan@cs.stanford.edu>"
@@ -81,7 +82,7 @@ tasks.emailConnie = ({student}, callback) ->
 # Send the student's new advisor an e-mail informing them of the new
 # declaree. Include their transcript and portrait in the email.
 #
-tasks.emailAdivsor = ({student, advisor, photoLink},callback) ->
+tasks.emailAdivsor = ({student, advisor, photoLink, pwd},callback) ->
   debug '** Email their advisor'
 
   headers =
