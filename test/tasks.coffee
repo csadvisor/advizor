@@ -116,9 +116,9 @@ describe 'tasks', ->
   #     subject : "New Declaree"
   #  h.sendEmail(headers, callback)
 
-  describe '#emailAdivsor', ->
+  describe '#emailAdvisor', ->
 
-  ## emailAdivsor
+  ## emailAdvsior
   ##
   ## Send the student's new advisor an e-mail informing them of the new
   ## declaree. Include their transcript and portrait in the email.

@@ -8,11 +8,12 @@ config  = require('config')
 
 h = {}
 
-h.getInfo = (pwd, callback) ->
+h.getInfo = ({pwd}, callback) ->
   debug "** Reading info:"
   info = fs.readFileSync("#{pwd}/info.json")
   info = JSON.parse(info)
   debug 'read info:', info
+  info.pwd = pwd # tack on pwd
   callback(null, info)
 
 h.writeJSON = ({filename, data, dir}, callback) ->
@@ -48,6 +49,8 @@ h.numberOfFilesInDir = ({dir}, callback) ->
     callback(null, stat.length)
 
 h.sendEmail = (headers, callback) ->
+  debug '#sendEmail'
+
   defaults =
     from    : 'Course Advisor <advisor@cs.stanford.edu>'
     to      : 'Course Advisor <advisor@cs.stanford.edu>'
@@ -69,11 +72,12 @@ h.buildEmailBody = ({advisor, student}) ->
 
   text =
     """
+
       #{student.first} #{student.last} is your new advisee. I'm attaching #{student.first}'s transcripts and photo.
 
       Jack Dubie
       CS Course Advisor
-      http://bit.ly/csadvisor"
+      http://bit.ly/csadvisor
     """
 
   # create email message

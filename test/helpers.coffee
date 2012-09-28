@@ -26,7 +26,7 @@ describe 'util/helpers', ->
       h.rmFile({filename: 'info.json', dir: __dirname}, finished)
 
     it 'should work', (done) ->
-      h.getInfo __dirname, (err, info) ->
+      h.getInfo pwd: __dirname, (err, info) ->
         info.should.have.keys('student', 'advisor', 'message')
         done()
 

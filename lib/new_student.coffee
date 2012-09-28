@@ -3,10 +3,12 @@ async = require 'async'
 _     = require 'underscore'
 spawn = require('child_process').spawn
 
-stdin = process.openStdin()
 
 # main function
 main = ->
+
+  stdin = process.openStdin()
+
   async.series
     file     : confirm_file
     student  : get_info

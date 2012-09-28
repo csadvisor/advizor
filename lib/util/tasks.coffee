@@ -1,6 +1,6 @@
 async = require('async')
 path  = require('path')
-debug = require('debug')
+debug = require('debug')('advizor/lib/util/tasks')
 h     = require('lib/util/helpers')
 
 
@@ -84,21 +84,22 @@ tasks.emailConnie = ({student}, callback) ->
   h.sendEmail(headers, callback)
 
 
-# emailAdivsor
+# emailAdvisor
 #
 # Send the student's new advisor an e-mail informing them of the new
 # declaree. Include their transcript and portrait in the email.
 #
-tasks.emailAdivsor = ({student, advisor, photoLink, pwd},callback) ->
+tasks.emailAdvisor = ({student, advisor, photoLink, pwd},callback) ->
   debug '** Email their advisor'
 
   headers =
      text    : h.buildEmailBody({student, advisor, photoLink})
-     to      : "#{info.advisor.first} #{info.advisor.last} <#{info.advisor.email}>"
-     cc      : info.student.email
+     to      : "#{advisor.first} #{advisor.last} <#{advisor.email}>"
+     cc      : student.email
      subject : "New Advisee"
-     attachments: [
-       { path: pwd + "/transcript.pdf", name: "#{info.student.last}_#{info.student.first}.pdf" }
+     attachment: [
+       { path: pwd + "/transcript.pdf", name: "#{student.last}_#{student.first}.pdf" }
+       { path: pwd + "/photo.jpg", name: "#{student.last}_#{student.first}.jpg" }
      ]
   h.sendEmail(headers, callback)
 

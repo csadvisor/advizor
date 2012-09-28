@@ -19,14 +19,32 @@
 #
 fs      = require 'fs'
 async   = require 'async'
-email   = require 'lib/email'
 h       = require 'lib/util/helpers'
+tasks = require 'lib/util/tasks'
 {spawn} = require 'child_process'
 debug   = require('debug')('lib/declare')
+_ = require 'underscore'
 
+module.exports = (argv, callback) ->
+  validateTasks = _.keys(tasks)
+  taskList = _.intersection(validateTasks, _.keys(argv))
+  taskList = validateTasks if taskList.length is 0
+  async.waterfall(wrapTasks(taskList), callback)
 
-declare = (opts, callback) ->
-  noFb = opts.no_fb || false
+# wrapTasks
+#
+# @param tasks {Array.<String>}
+# @return {Array.<Function>}
+wrapTasks = (taskList) ->
 
-  debug 'noFb', noFb
+  taskFunctions = (tasks[key] for key in taskList)
+  
+  waterfallCurry = (taskFunction) ->
+    (info, next) ->
+      taskFunction info, (err, res) ->
+        next(err, _.extend(info, res))
+
+  curriedTaskFunctions = taskFunctions.map (taskFunction) -> waterfallCurry(taskFunction)
+  curriedTaskFunctions.unshift((callback) -> h.getInfo(pwd: process.env.PWD, callback)) # getInfo
+  curriedTaskFunctions
 
