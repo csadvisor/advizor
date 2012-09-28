@@ -27,7 +27,7 @@ describe 'util/helpers', ->
 
     it 'should work', (done) ->
       h.getInfo pwd: __dirname, (err, info) ->
-        info.should.have.keys('student', 'advisor', 'message')
+        info.should.have.keys('student', 'advisor', 'message', 'pwd')
         done()
 
   describe '#writeJSON', ->

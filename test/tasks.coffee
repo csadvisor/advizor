@@ -40,23 +40,23 @@ describe 'tasks', ->
       fs.existsSync(dstPath).should.be.ok
 
 
-  describe '#notifyMeredith', ->
+      #describe '#notifyMeredith', ->
 
-    pwd = __dirname
-    folder = path.join(pwd, '..', '_photos', '_pending')
+      #  pwd = __dirname
+      #  folder = path.join(pwd, '..', '_photos', '_pending')
 
-    before ->
-      mkdirp.sync folder
+      #  before ->
+      #    mkdirp.sync folder
 
-    after ->
-      fs.rmdirSync folder
-      fs.rmdirSync path.join(pwd, '..', '_photos')
+      #  after ->
+      #    fs.rmdirSync folder
+      #    fs.rmdirSync path.join(pwd, '..', '_photos')
 
-    it 'should return false if less than 6 spots', (done) ->
-      tasks.notifyMeredith {pwd}, (err, res) ->
-        should.not.exist(err)
-        res.should.not.be.ok
-        done()
+      #  it 'should return false if less than 6 spots', (done) ->
+      #    tasks.notifyMeredith {pwd}, (err, res) ->
+      #      should.not.exist(err)
+      #      res.should.not.be.ok
+      #      done()
 
   ## notifyMeredith
   ##
