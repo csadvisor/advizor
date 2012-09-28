@@ -25,46 +25,46 @@ tasks.archivePhoto = ({student, pwd}, callback) ->
 # Meredith's template currently has 6 spots, so send her photographs
 # in sets of 6 to be printed.
 #
-tasks.notifyMeredith = ({pwd}, callback) ->
-
-  async.waterfall [
-
-    (next) ->
-      pendingDir = path.join(pwd, '..', '_photos', '_pending')
-      debug '#notifyMeredith checking', pendingDir
-      h.numberOfFilesInDir(dir: pendingDir, next)
-
-    (number, next) ->
-      next(null, number >= 6)
-
-
-    (shouldPdf, next) ->
-      return next(null, shouldPdf) unless shouldPdf
-
-      # generate photo email
-
-    (shouldEmail, next) ->
-      return next(null, shouldEmail) unless shouldEmail
-
-      # send meredith email
-
-    (shouldTar, next) ->
-      return next(null, shouldTar) unless shouldTar
-
-      # tar and archive old photos
-
-      #tar = child_process.spawn 'tar', ['cvzf','','cps10']
-      #tar.on 'exit', ->
-
-  ], callback
+#tasks.notifyMeredith = ({pwd}, callback) ->
+#
+#  async.waterfall [
+#
+#    (next) ->
+#      pendingDir = path.join(pwd, '..', '_photos', '_pending')
+#      debug '#notifyMeredith checking', pendingDir
+#      h.numberOfFilesInDir(dir: pendingDir, next)
+#
+#    (number, next) ->
+#      next(null, number >= 6)
+#
+#
+#    (shouldPdf, next) ->
+#      return next(null, shouldPdf) unless shouldPdf
+#
+#      # generate photo email
+#
+#    (shouldEmail, next) ->
+#      return next(null, shouldEmail) unless shouldEmail
+#
+#      # send meredith email
+#
+#    (shouldTar, next) ->
+#      return next(null, shouldTar) unless shouldTar
+#
+#      # tar and archive old photos
+#
+#      #tar = child_process.spawn 'tar', ['cvzf','','cps10']
+#      #tar.on 'exit', ->
+#
+#  ], callback
 
 
 # subscribeAnnounceList
 #
 tasks.subscribeAnnounceList = ({student}, callback) ->
   headers =
-     from    : "#{student.first} #{student.last} <#{student.email}>"
-     to      : "cs-students-announce-subscribe@lists.stanford.edu"
+    from    : "#{student.first} #{student.last} <#{student.email}>"
+    to      : "cs-students-announce-subscribe@lists.stanford.edu"
   h.sendEmail(headers, callback)
 
 
@@ -89,7 +89,7 @@ tasks.emailConnie = ({student}, callback) ->
 # Send the student's new advisor an e-mail informing them of the new
 # declaree. Include their transcript and portrait in the email.
 #
-tasks.emailAdvisor = ({student, advisor, photoLink, pwd},callback) ->
+tasks.emailAdvisor = ({student, advisor, photoLink, pwd}, callback) ->
   debug '** Email their advisor'
 
   headers =
@@ -99,6 +99,23 @@ tasks.emailAdvisor = ({student, advisor, photoLink, pwd},callback) ->
      subject : "New Advisee"
      attachment: [
        { path: pwd + "/transcript.pdf", name: "#{student.last}_#{student.first}.pdf" }
+       { path: pwd + "/photo.jpg", name: "#{student.last}_#{student.first}.jpg" }
+     ]
+  h.sendEmail(headers, callback)
+
+
+# facebookPost
+#
+# Send email to IFTTT to trigger facebook page wall post
+# This is much easier than dealer with FB API
+tasks.facebookPost = ({student, message, pwd}, callback) ->
+  debug '** Post to facebook'
+
+  headers =
+     text    : message
+     to      : "trigger@ifttt.com"
+     subject : "New CS Major"
+     attachment: [
        { path: pwd + "/photo.jpg", name: "#{student.last}_#{student.first}.jpg" }
      ]
   h.sendEmail(headers, callback)
