@@ -1,5 +1,3 @@
-process.env.DEBUG="advizor*"
-
 debug = require('debug')('advizor/lib/util/helpers')
 fs = require('fs')
 path = require('path')
