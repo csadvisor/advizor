@@ -1,0 +1,39 @@
+{
+  "name" : "advizor",
+  "version" : "0.0.1",
+  "description" : "Command line utility that replaces the CS Course Advisor.",
+  "bin" : "./bin",
+  "directories" : {
+    "lib" : "./lib"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "http://github.com/courseadvisor/advizor.git"
+  },
+  "keywords" : [
+    "Stanford",
+    "Computer Science",
+    "Declaring"
+  ],
+  "author" : {
+    "name" : "Jack Dubie",
+    "email" : "advisor@cs.stanford.edu",
+    "url" : "http://jackdubie.com"
+  },
+  "license" : "MIT/X11",
+  "engine" : {
+    "node" : ">=0.4"
+  },
+  "dependencies" : {
+    "optimist" : "0.3.4",
+    "emailjs" : "0.2.9",
+    "async" : "0.1.22",
+    "coffee-script" : "*",
+    "debug": "*",
+    "mkdirp": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  }
+}
