@@ -1,8 +1,9 @@
-h = require('lib/util/helpers')
+h      = require('lib/util/helpers')
 should = require('should')
-fs = require('fs')
-path = require('path')
+fs     = require('fs')
+path   = require('path')
 mkdirp = require('mkdirp')
+async  = require('async')
 
 describe 'util/helpers', ->
   describe '#getInfo', ->
@@ -25,9 +26,8 @@ describe 'util/helpers', ->
       h.rmFile({filename: 'info.json', dir: __dirname}, finished)
 
     it 'should work', (done) ->
-      h.getInfo __dirname, (err, info) ->
-        info.should.have.keys 'student', 'advisor', 'message'
-        console.error info
+      h.getInfo pwd: __dirname, (err, info) ->
+        info.should.have.keys('student', 'advisor', 'message', 'pwd')
         done()
 
   describe '#writeJSON', ->
@@ -71,6 +71,24 @@ describe 'util/helpers', ->
     it 'shoud work', (done) ->
       h.mvFile({filename, dir, destDir, destFilename}, done)
 
+  describe '#cpFile', ->
+
+    filename = 'cp_src_test.txt'
+    dir = destDir =  __dirname
+    destFilename = 'cp_dst_test.txt'
+
+    before ->
+      fs.writeFileSync path.join(dir, filename), 'hwefwef'
+
+    after (done) ->
+      async.parallel [
+        (callback) -> h.rmFile({filename, dir}, callback)
+        (callback) -> h.rmFile({filename: destFilename, dir: destDir}, callback)
+      ], done
+
+    it 'shoud work', (done) ->
+      h.cpFile({filename, dir, destDir, destFilename}, done)
+
   describe '#numberOfFilesInDir', ->
     dir = path.join(__dirname, 'test_dir')
 
@@ -79,48 +97,52 @@ describe 'util/helpers', ->
       fs.writeFileSync path.join(dir, 'f1'), 'hey imma file 1'
       fs.writeFileSync path.join(dir, 'f2'), 'hey imma file 2'
 
+    after ->
+      fs.unlinkSync path.join(dir, 'f1')
+      fs.unlinkSync path.join(dir, 'f2')
+      fs.rmdirSync dir
+
     it 'should get the correct number of file', (done) ->
       h.numberOfFilesInDir {dir}, (err, res) ->
         should.not.exist(err)
         res.should.eql 2
         done()
 
+      
+        # This works but spammy
 
-      #h.numberOfFilesInDir = ({dir}, callback) ->
-      #  fs.readdir dir, (err, stat) ->
-      #    return callback(err) if err
-      #    debug "#numberOfFilesInDir _pending photos size: #{stat.length}"
-      #    callback(null, stat.length)
-      #
-      #h.sendEmail = (headers, callback) ->
-      #  defaults =
-      #    from    : 'Course Advisor <advisor@cs.stanford.edu>'
-      #    to      : 'Course Advisor <advisor@cs.stanford.edu>'
-      #    bcc     : 'csadvisor.bcc@gmail.com'
-      #    subject : 'test email'
-      #    text    : 'test text'
-      #  _.defaults(headers, defaults)
-      #
-      #  message = email.message.create(headers)
-      #  config.smtp.send(message, callback)
-      #
-      #
-      #h.buildEmailBody = ({advisor, student, photoLink}) ->
-      #
-      #  switch advisor.title
-      #    when 'professor' then salutation = "Dear Professor #{advisor.last},"
-      #    when 'lecturer'  then salutation = "Dear #{advisor.first},"
-      #    else salutation = "Dear #{advisor.first} #{advisor.last},"
-      #
-      #  attachments_location = ''
-      #  attachments_location += "I'm attaching #{student.first}'s transcripts"
-      #  attachments_location += "and including a link to a photo below." if photoLink?
-      #
-      #  signature = "Jack Dubie\nCS Course Advisor\nhttp://bit.ly/csadvisor"
-      #  photoLink = '' unless photoLink?
-      #
-      #  # create email message
-      #  greeting + '\n' + new_advisee + attachments_location + '\n' + signature + photoLink
-      #
+        #  describe '#sendEmail', ->
+        #
+        #    file = path.join(__dirname, 'f1')
+        #
+        #    before ->
+        #      fs.writeFileSync(file, 'hey imma file 1')
+        #
+        #    after ->
+        #      fs.unlinkSync(file)
+        #
+        #    it 'should not callback an error', (done) ->
+        #      headers =
+        #        to: 'jdubie2233@yahoo.com'
+        #        subject: 'unit test'
+        #        text: 'teeext'
+        #        attachment: [
+        #          { path: file, name: 'text.txt', type: 'application/text' }
+        #        ]
+        #      h.sendEmail(headers, done)
+
+  describe '#buildEmailBody', ->
+    it 'should be formal with professors', ->
+      advisor = first: 'Mehran', last: 'Sahami', title: 'professor'
+      student = first: 'John'
+      body = h.buildEmailBody({advisor, student})
+      body.should.match /Professor/
+
+    it 'should be cause with non-professors', ->
+      advisor = first: 'Mehran', last: 'Sahami', title: 'lecturer'
+      student = first: 'John'
+      body = h.buildEmailBody({advisor, student})
+      body.should.not.match /Professor/
+
 
 module.exports = h

@@ -30,7 +30,8 @@
     "async" : "0.1.22",
     "coffee-script" : "*",
     "debug": "*",
-    "mkdirp": "*"
+    "mkdirp": "*",
+    "underscore": "*"
   },
   "devDependencies": {
     "mocha": "*",

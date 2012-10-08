@@ -1,18 +1,19 @@
-process.env.DEBUG="advizor*"
-
-debug = require('debug')('advizor/lib/util/helpers')
-fs = require('fs')
-path = require('path')
-child_process = require 'child_process'
-spawn = child_process.spawn
+debug   = require('debug')('advizor/lib/util/helpers')
+fs      = require('fs')
+path    = require('path')
+_       = require('underscore')
+{spawn} = require('child_process')
+email   = require('emailjs')
+config  = require('config')
 
 h = {}
 
-h.getInfo = (pwd, callback) ->
+h.getInfo = ({pwd}, callback) ->
   debug "** Reading info:"
   info = fs.readFileSync("#{pwd}/info.json")
   info = JSON.parse(info)
   debug 'read info:', info
+  info.pwd = pwd # tack on pwd
   callback(null, info)
 
 h.writeJSON = ({filename, data, dir}, callback) ->
@@ -29,7 +30,17 @@ h.mvFile = ({filename, dir, destDir, destFilename}, callback) ->
   mv = spawn 'mv', [from, to]
   mv.on 'exit', (code) ->
     return callback() if code == 0
-    callback("mv exited with non-zero exit code: #{code}")
+
+h.cpFile = ({filename, dir, destDir, destFilename}, callback) ->
+  from = path.join(dir, filename)
+  to = path.join(destDir, destFilename)
+  debug '#mvFile (from, to)', from, to
+  destFilename ?= filename
+  cp = spawn 'cp', [from, to]
+  cp.on 'exit', (code) ->
+    return callback() if code == 0
+    callback("cp exited with non-zero exit code: #{code}")
+    callback("cp exited with non-zero exit code: #{code}")
 
 h.numberOfFilesInDir = ({dir}, callback) ->
   fs.readdir dir, (err, stat) ->
@@ -38,6 +49,8 @@ h.numberOfFilesInDir = ({dir}, callback) ->
     callback(null, stat.length)
 
 h.sendEmail = (headers, callback) ->
+  debug '#sendEmail'
+
   defaults =
     from    : 'Course Advisor <advisor@cs.stanford.edu>'
     to      : 'Course Advisor <advisor@cs.stanford.edu>'
@@ -50,22 +63,25 @@ h.sendEmail = (headers, callback) ->
   config.smtp.send(message, callback)
 
 
-h.buildEmailBody = ({advisor, student, photoLink}) ->
+h.buildEmailBody = ({advisor, student}) ->
 
-  switch advisor.title
-    when 'professor' then salutation = "Dear Professor #{advisor.last},"
-    when 'lecturer'  then salutation = "Dear #{advisor.first},"
-    else salutation = "Dear #{advisor.first} #{advisor.last},"
+  salutation = switch advisor.title
+    when 'professor' then "Dear Professor #{advisor.last},"
+    when 'lecturer'  then "Dear #{advisor.first},"
+    else "Dear #{advisor.first} #{advisor.last},"
 
-  attachments_location = ''
-  attachments_location += "I'm attaching #{student.first}'s transcripts"
-  attachments_location += "and including a link to a photo below." if photoLink?
+  text =
+    """
 
-  signature = "Jack Dubie\nCS Course Advisor\nhttp://bit.ly/csadvisor"
-  photoLink = '' unless photoLink?
+      #{student.first} #{student.last} is your new advisee. I'm attaching #{student.first}'s transcripts and photo.
+
+      Jack Dubie
+      CS Course Advisor
+      http://bit.ly/csadvisor
+    """
 
   # create email message
-  greeting + '\n' + new_advisee + attachments_location + '\n' + signature + photoLink
+  salutation + '\n' + text
 
 
 module.exports = h

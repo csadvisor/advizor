@@ -17,15 +17,34 @@
 #
 # 5. Add their name/portrait to the Course Advisor Facebook Page.
 #
+fs      = require 'fs'
+async   = require 'async'
+h       = require 'lib/util/helpers'
+tasks = require 'lib/util/tasks'
+{spawn} = require 'child_process'
+debug   = require('debug')('lib/declare')
+_ = require 'underscore'
 
+module.exports = (argv, callback) ->
+  validateTasks = _.keys(tasks)
+  taskList = _.intersection(validateTasks, _.keys(argv))
+  taskList = validateTasks if taskList.length is 0
+  async.waterfall(wrapTasks(taskList), callback)
 
-fs    = require 'fs'
-child_process = require 'child_process'
-async = require 'async'
-email = require './email'
-h     = require './util/helpers'
-#exists = require './util/exists'
+# wrapTasks
+#
+# @param tasks {Array.<String>}
+# @return {Array.<Function>}
+wrapTasks = (taskList) ->
 
-declare = (opts, callback) ->
-  no_fb = opts.no_fb || false
+  taskFunctions = (tasks[key] for key in taskList)
+  
+  waterfallCurry = (taskFunction) ->
+    (info, next) ->
+      taskFunction info, (err, res) ->
+        next(err, _.extend(info, res))
+
+  curriedTaskFunctions = taskFunctions.map (taskFunction) -> waterfallCurry(taskFunction)
+  curriedTaskFunctions.unshift((callback) -> h.getInfo(pwd: process.env.PWD, callback)) # getInfo
+  curriedTaskFunctions
 

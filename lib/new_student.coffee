@@ -3,10 +3,19 @@ async = require 'async'
 _     = require 'underscore'
 spawn = require('child_process').spawn
 
-stdin = process.openStdin()
+
+local = {}
+Object.defineProperty local, 'stdin', do ->
+  stdin = null # private variable
+  get: () ->
+    return stdin if _stdin?
+    return stdin = process.openStdin()
+  enumerable: false
+
 
 # main function
 main = ->
+
   async.series
     file     : confirm_file
     student  : get_info
@@ -17,7 +26,7 @@ main = ->
 confirm_file = (callback) ->
   latest_file = get_latest_pdf()
   process.stdout.write "Is this their file #{latest_file}? (y/n): "
-  stdin.once 'data', (chunk, key) ->
+  local.stdin.once 'data', (chunk, key) ->
     if chunk.toString() != "y\n"
       console.log 'students transcript is not latest pdf downloaded'
       process.exit 0
@@ -35,7 +44,7 @@ get_advisor_info = (callback) ->
   async.series
     first : (cb) -> get_field 'enter advisor\'s first name: ', cb
     last  : (cb) -> get_field 'enter advisor\'s last name: ',  cb
-    title : (cb) -> get_field 'enter advisor\'s title: ',                 cb
+    title : (cb) -> get_field 'enter advisor\'s title: ',      cb
     email : (cb) -> get_field 'enter advisor\'s email: ',      cb
   , callback
 
@@ -55,7 +64,7 @@ get_latest_pdf = ->
 
 get_field = (question, callback) ->
   process.stdout.write question
-  stdin.once 'data', (chunk) ->
+  local.stdin.once 'data', (chunk) ->
     chunk = chunk.toString()
     chunk = chunk.split('\n')[0]
     callback null, chunk
