@@ -38,14 +38,15 @@ get_info = (callback) ->
     first : (cb) -> get_field 'enter student\'s first name: ', cb
     last  : (cb) -> get_field 'enter student\'s last name: ',  cb
     email : (cb) -> get_field 'enter student\'s email: ',      cb
+    year  : (cb) -> get_field 'enter student\'s grad year: ',  cb
   , callback
 
 get_advisor_info = (callback) ->
   async.series
     first : (cb) -> get_field 'enter advisor\'s first name: ', cb
     last  : (cb) -> get_field 'enter advisor\'s last name: ',  cb
-    title : (cb) -> get_field 'enter advisor\'s title: ',      cb
     email : (cb) -> get_field 'enter advisor\'s email: ',      cb
+    title : (cb) -> get_field 'enter advisor\'s title: ',      cb
   , callback
 
 get_latest_pdf = ->

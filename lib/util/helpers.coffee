@@ -73,7 +73,7 @@ h.buildEmailBody = ({advisor, student}) ->
   text =
     """
 
-      #{student.first} #{student.last} is your new advisee. I'm attaching #{student.first}'s transcripts and photo.
+      #{student.first} #{student.last} (#{student.year}) is your new advisee. I'm attaching #{student.first}'s transcripts and photo.
 
       Jack Dubie
       CS Course Advisor
