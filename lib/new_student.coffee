@@ -1,4 +1,5 @@
 fs    = require 'fs'
+path  = require 'path'
 async = require 'async'
 _     = require 'underscore'
 spawn = require('child_process').spawn
@@ -35,10 +36,11 @@ confirm_file = (callback) ->
 
 get_info = (callback) ->
   async.series
-    first : (cb) -> get_field 'enter student\'s first name: ', cb
-    last  : (cb) -> get_field 'enter student\'s last name: ',  cb
-    email : (cb) -> get_field 'enter student\'s email: ',      cb
-    year  : (cb) -> get_field 'enter student\'s grad year: ',  cb
+    first : (cb) -> get_field 'enter student\'s first name: '    , cb
+    last  : (cb) -> get_field 'enter student\'s last name: '     , cb
+    email : (cb) -> get_field 'enter student\'s email: '         , cb
+    year  : (cb) -> get_field 'enter student\'s grad year: '     , cb
+    track : (cb) -> get_field 'enter student\'s intended track: ', cb
   , callback
 
 get_advisor_info = (callback) ->
@@ -90,13 +92,13 @@ write_info = (file, info, callback) ->
 
 add_student = (info) ->
   folder = "#{info.student.last.toLowerCase()}_#{info.student.first.toLowerCase()}"
-  src = "#{process.env.HOME}/Downloads/#{info.file}"
-  dst = "#{process.env.HOME}/Dropbox/Developer/course_advisor/declaring/_pending/#{folder}/transcript.pdf"
-  info_file = "#{process.env.HOME}/Dropbox/Developer/course_advisor/declaring/_pending/#{folder}/info.json"
-  new_dir = "#{process.env.HOME}/Dropbox/Developer/course_advisor/declaring/_pending/#{folder}"
+  dst_folder = path.join(process.cwd(), folder)
+  src = path.join(process.env.HOME, 'Downloads', info.file)
+  dst = path.join(dst_folder, 'transcript.pdf')
+  info_file = path.join(dst_folder, 'info.json')
 
   async.series [
-    (cb) -> create_folder new_dir, cb
+    (cb) -> create_folder dst_folder, cb
     (cb) -> cpy           src, dst, cb
     (cb) -> write_info    info_file, info, cb
   ], (err,res) ->
@@ -104,7 +106,7 @@ add_student = (info) ->
       console.log err
       process.exit 1
     else
-      console.log "Created student folder: #{new_dir}"
+      console.log "Created student folder: #{dst_folder}"
       process.exit 0
 
 

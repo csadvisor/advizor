@@ -6,7 +6,8 @@ process.env.DEBUG = 'advizor*'
 declare     = require 'lib/declare'
 photo       = require 'lib/photo'
 new_student = require 'lib/new_student'
-optimist = require 'optimist'
+optimist    = require 'optimist'
+
 debug = require('debug')('advizor/bin/advizor')
 
 argv = optimist
