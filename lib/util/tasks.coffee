@@ -21,6 +21,7 @@ tasks.archivePhoto = ({student, pwd}, callback) ->
 
 
 # notifyMeredith
+# TODO
 #
 # Meredith's template currently has 6 spots, so send her photographs
 # in sets of 6 to be printed.
@@ -58,17 +59,37 @@ tasks.archivePhoto = ({student, pwd}, callback) ->
 #
 #  ], callback
 
+# trackSpecificTasks
+#
+tasks.trackSpecificTasks = ({student}, callback) ->
+  switch student.track
+    when 'HCI'
+      tasks = [
+        (cb) ->
+          debug "HCI Task: emailing hci-course-advisor"
+          text = "#{student.first} #{student.last} [#{student.email}]"
+          headers =
+             text    : text
+             to      : "hci-course-advisor@cs.stanford.edu"
+             subject : "New HCI Declaree"
+          h.sendEmail(headers, cb)
+        (cb) ->
+          debug "HCI Task: Subscribing to hci-students"
+          h.subscribeList({'hci-students', student}, cb)
+        (cb) ->
+          debug "HCI Task: Subscribing to hci-student-jobs"
+          h.subscribeList({'hci-student-jobs', student}, cb)
+      ]
+      async.series(tasks, callback)
+    else
+      callback()
+
+# subscribe
 
 # subscribeAnnounceList
 #
 tasks.subscribeAnnounceList = ({student}, callback) ->
-  headers =
-    from    : "#{student.first} #{student.last} <#{student.email}>"
-    to      : "cs-students-announce-subscribe@lists.stanford.edu"
-    text    : 'subscribing to cs-students-announce@lists.stanford.edu'
-    subject : 'subscribing to cs-students-announce'
-  h.sendEmail(headers, callback)
-
+  h.subscribeList({'cs-students-announce', student}, callback)
 
 # emailConnie
 #

@@ -83,5 +83,12 @@ h.buildEmailBody = ({advisor, student}) ->
   # create email message
   salutation + '\n' + text
 
+h.subscribeList = ({student, list}, callback) ->
+  headers =
+    from    : "#{student.first} #{student.last} <#{student.email}>"
+    to      : "#{list}-subscribe@lists.stanford.edu"
+    text    : "subscribing to #{list}@lists.stanford.edu"
+    subject : "subscribing to #{list}"
+  h.sendEmail(headers, callback)
 
 module.exports = h
