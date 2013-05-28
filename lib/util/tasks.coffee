@@ -102,7 +102,7 @@ tasks.emailConnie = ({student}, callback) ->
   text = "#{student.first} #{student.last} [#{student.email}]"
   headers =
      text    : text
-     to      : "Connie Chan <cchan@cs.stanford.edu>"
+     to      : "forumstaff@cs.stanford.edu"
      subject : "New Declaree"
   h.sendEmail(headers, callback)
 
