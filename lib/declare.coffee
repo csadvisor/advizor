@@ -19,11 +19,11 @@
 #
 fs      = require 'fs'
 async   = require 'async'
-h       = require 'lib/util/helpers'
-tasks = require 'lib/util/tasks'
 {spawn} = require 'child_process'
+_       = require 'underscore'
 debug   = require('debug')('lib/declare')
-_ = require 'underscore'
+h       = require './util/helpers'
+tasks   = require './util/tasks'
 
 module.exports = (argv, callback) ->
   validateTasks = _.keys(tasks)

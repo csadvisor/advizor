@@ -4,7 +4,7 @@ path    = require('path')
 _       = require('underscore')
 {spawn} = require('child_process')
 email   = require('emailjs')
-config  = require('config')
+config  = require('../../config')
 
 h = {}
 

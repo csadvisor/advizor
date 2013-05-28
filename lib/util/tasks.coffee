@@ -1,7 +1,7 @@
 async = require('async')
 path  = require('path')
 debug = require('debug')('advizor/lib/util/tasks')
-h     = require('lib/util/helpers')
+h     = require('./helpers')
 
 
 tasks = {}
@@ -75,10 +75,10 @@ tasks.trackSpecificTasks = ({student}, callback) ->
           h.sendEmail(headers, cb)
         (cb) ->
           debug "HCI Task: Subscribing to hci-students"
-          h.subscribeList({'hci-students', student}, cb)
+          h.subscribeList({list: 'hci-students', student}, cb)
         (cb) ->
           debug "HCI Task: Subscribing to hci-student-jobs"
-          h.subscribeList({'hci-student-jobs', student}, cb)
+          h.subscribeList({list: 'hci-student-jobs', student}, cb)
       ]
       async.series(tasks, callback)
     else
@@ -89,7 +89,7 @@ tasks.trackSpecificTasks = ({student}, callback) ->
 # subscribeAnnounceList
 #
 tasks.subscribeAnnounceList = ({student}, callback) ->
-  h.subscribeList({'cs-students-announce', student}, callback)
+  h.subscribeList({list: 'cs-students-announce', student}, callback)
 
 # emailConnie
 #
