@@ -2,9 +2,20 @@ async = require('async')
 path  = require('path')
 debug = require('debug')('advizor/lib/util/tasks')
 h     = require('./helpers')
+_     = require('underscore')
 
 
 tasks = {}
+
+#Rename the photo to photo.jpg
+#
+tasks.renamePhoto = ({student, pwd}, callback) ->
+  debug '#renamePhoto student', student
+
+  newPhotoName = 'photo.jpg'
+
+  h.renamePhoto(newPhotoName, callback)
+
 
 # Copy the student's picture from the camera to your computer.
 #
@@ -14,7 +25,7 @@ tasks.archivePhoto = ({student, pwd}, callback) ->
   opts =
     filename    : 'photo.jpg'
     dir         : pwd
-    destDir     : path.join(pwd, '..', '_photos', '_pending')
+    destDir     : path.join(pwd, '..', '..',  '_photos', '_pending')
     destFilename: "#{student.last}_#{student.first}.jpg"
 
   h.cpFile(opts, callback)

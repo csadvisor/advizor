@@ -24,6 +24,7 @@ h.rmFile = ({filename, dir}, callback) ->
 
 h.mvFile = ({filename, dir, destDir, destFilename}, callback) ->
   from = path.join(dir, filename)
+  console.log destFilename
   to = path.join(destDir, destFilename)
   debug '#mvFile (from, to)', from, to
   destFilename ?= filename
@@ -48,6 +49,30 @@ h.numberOfFilesInDir = ({dir}, callback) ->
     debug "#numberOfFilesInDir _pending photos size: #{stat.length}"
     callback(null, stat.length)
 
+h.renamePhoto = (newName, callback) ->
+  files = fs.readdirSync '.'
+  files = _.select files, (file) -> 
+    file.match /jpg/
+  if files.length > 1
+    console.log 'More than one photo in dir'
+    process.exit 1
+  if files.length == 0
+    console.log 'No photo found in dir'
+    process.exit 1
+ 
+  oldName = files[0]
+  
+  opts =
+    filename    :  oldName
+    dir         :  '.'
+    destDir     :  '.'
+    destFilename:  newName
+
+  console.log opts
+
+  h.mvFile(opts, callback)
+  
+    
 h.sendEmail = (headers, callback) ->
   debug '#sendEmail'
 
@@ -65,7 +90,7 @@ h.sendEmail = (headers, callback) ->
 
 h.buildEmailBody = ({advisor, student}) ->
 
-  salutation = switch advisor.title
+  salutation = switch advisor.title.toLowerCase()
     when 'professor' then "Dear Professor #{advisor.last},"
     when 'lecturer'  then "Dear #{advisor.first},"
     else "Dear #{advisor.first} #{advisor.last},"
@@ -75,7 +100,7 @@ h.buildEmailBody = ({advisor, student}) ->
 
       #{student.first} #{student.last} (#{student.year}) is your new advisee. I'm attaching #{student.first}'s transcripts and photo.
 
-      Jack Dubie
+      Alex Eckert
       CS Course Advisor
       http://bit.ly/csadvisor
     """

@@ -11,19 +11,19 @@
 <% if @students.length > 0: %>
   \begin{figure}
   \vspace{-.3 in}
-  <% if @students[0]: %>\subfloat[<%= @students[0].name %>]{\label{fig:gull}\includegraphics[width=0.32\textwidth,angle=-90]{<%= @students[0].photo %>}}<% end %>
-  <% if @students[1]: %>\quad\subfloat[<%= @students[1].name %>]{\label{fig:tiger}\includegraphics[width=0.32\textwidth,angle=-90]{<%= @students[1].photo %>}}<% end %>
-  <% if @students[2]: %>\quad\subfloat[<%= @students[2].name %>]{\label{fig:mouse}\includegraphics[width=0.32\textwidth,angle=-90]{<%= @students[2].photo %>}}<% end %>
-  <% if @students[3]: %>\quad\subfloat[<%= @students[3].name %>]{\label{fig:mouse}\includegraphics[width=0.32\textwidth,angle=-90]{<%= @students[3].photo %>}}<% end %>
+  <% if @students[0]: %>\subfloat[<%= @students[0].name %>]{\label{fig:gull}\includegraphics[width=0.24\textwidth]{<%= @students[0].photo %>}}<% end %>
+  <% if @students[1]: %>\quad\subfloat[<%= @students[1].name %>]{\label{fig:tiger}\includegraphics[width=0.24\textwidth]{<%= @students[1].photo %>}}<% end %>
+  <% if @students[2]: %>\quad\subfloat[<%= @students[2].name %>]{\label{fig:mouse}\includegraphics[width=0.24\textwidth]{<%= @students[2].photo %>}}<% end %>
+  <% if @students[3]: %>\quad\subfloat[<%= @students[3].name %>]{\label{fig:mouse}\includegraphics[width=0.24\textwidth]{<%= @students[3].photo %>}}<% end %>
   \end{figure}
 <% end %>
 <% if @students.length > 4: %>
   \begin{figure}
   \vspace{0 in}
-  <% if @students[4]: %>\subfloat[<%= @students[4].name  %>]{\label{fig:gull}\includegraphics[width=0.32\textwidth,angle=-90]{<%= @students[4].photo %>}}<% end %>
-  <% if @students[5]: %>\quad\subfloat[<%= @students[5].name %>]{\label{fig:tiger}\includegraphics[width=0.32\textwidth,angle=-90]{<%= @students[5].photo %>}}<% end %>
-  <% if @students[6]: %>\quad\subfloat[<%= @students[6].name %>]{\label{fig:mouse}\includegraphics[width=0.32\textwidth,angle=-90]{<%= @students[6].photo %>}}<% end %>
-  <% if @students[7]: %>\quad\subfloat[<%= @students[7].name %>]{\label{fig:mouse}\includegraphics[width=0.32\textwidth,angle=-90]{<%= @students[7].photo %>}}<% end %>
+  <% if @students[4]: %>\subfloat[<%= @students[4].name  %>]{\label{fig:gull}\includegraphics[width=0.24\textwidth]{<%= @students[4].photo %>}}<% end %>
+  <% if @students[5]: %>\quad\subfloat[<%= @students[5].name %>]{\label{fig:tiger}\includegraphics[width=0.24\textwidth]{<%= @students[5].photo %>}}<% end %>
+  <% if @students[6]: %>\quad\subfloat[<%= @students[6].name %>]{\label{fig:mouse}\includegraphics[width=0.24\textwidth]{<%= @students[6].photo %>}}<% end %>
+  <% if @students[7]: %>\quad\subfloat[<%= @students[7].name %>]{\label{fig:mouse}\includegraphics[width=0.24\textwidth]{<%= @students[7].photo %>}}<% end %>
   \end{figure}
 <% end %>
 \end{document}
