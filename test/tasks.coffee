@@ -17,21 +17,23 @@ describe 'tasks', ->
     student = first: 'firstname', last: 'lastname'
 
     src = __dirname
-    srcFile = 'photo.jpg'
-    srcPath = path.join(src, srcFile)
-    dst = path.join(src, '..', '_photos', '_pending')
+    origFile = 'blabla.jpg'
+    origPath = path.join(src, origFile)
+    renamedFile = 'photo.jpg'
+    renamedPath = path.join(src, renamedFile)
+    dst = path.join(src, '..', '..', '_photos', '_pending')
     dstFile = "#{student.last}_#{student.first}.jpg"
     dstPath = path.join(dst, dstFile)
 
     before ->
-      fs.writeFileSync srcPath, 'hwefwef'
+      fs.writeFileSync origPath, 'hwefwef'
       mkdirp.sync dst
 
     after ->
-      fs.unlinkSync srcPath
+      fs.unlinkSync renamedPath
       fs.unlinkSync dstPath
       fs.rmdirSync dst
-      fs.rmdirSync path.join(src, '..', '_photos')
+      fs.rmdirSync path.join(src, '../..', '_photos')
 
     it 'should not return error', (done) ->
       tasks.archivePhoto({student, pwd: src}, done)

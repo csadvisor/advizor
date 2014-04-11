@@ -7,23 +7,17 @@ _     = require('underscore')
 
 tasks = {}
 
-#Rename the photo to photo.jpg
-#
-tasks.renamePhoto = ({student, pwd}, callback) ->
-  debug '#renamePhoto student', student
-
-  newPhotoName = 'photo.jpg'
-
-  h.renamePhoto(newPhotoName, callback)
-
-
 # Copy the student's picture from the camera to your computer.
 #
 tasks.archivePhoto = ({student, pwd}, callback) ->
   debug '#archivePhoto student', student
 
+  newPhotoName = 'photo.jpg'
+
+  h.renamePhoto(newPhotoName, pwd)
+
   opts =
-    filename    : 'photo.jpg'
+    filename    : newPhotoName
     dir         : pwd
     destDir     : path.join(pwd, '..', '..',  '_photos', '_pending')
     destFilename: "#{student.last}_#{student.first}.jpg"

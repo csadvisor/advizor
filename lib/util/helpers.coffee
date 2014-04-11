@@ -30,7 +30,7 @@ h.mvFile = ({filename, dir, destDir, destFilename}, callback) ->
   destFilename ?= filename
   mv = spawn 'mv', [from, to]
   mv.on 'exit', (code) ->
-    return callback() if code == 0
+    return callback() if callback && code == 0
 
 h.cpFile = ({filename, dir, destDir, destFilename}, callback) ->
   from = path.join(dir, filename)
@@ -39,7 +39,7 @@ h.cpFile = ({filename, dir, destDir, destFilename}, callback) ->
   destFilename ?= filename
   cp = spawn 'cp', [from, to]
   cp.on 'exit', (code) ->
-    return callback() if code == 0
+    return callback() if callback && code == 0
     callback("cp exited with non-zero exit code: #{code}")
     callback("cp exited with non-zero exit code: #{code}")
 
@@ -49,8 +49,8 @@ h.numberOfFilesInDir = ({dir}, callback) ->
     debug "#numberOfFilesInDir _pending photos size: #{stat.length}"
     callback(null, stat.length)
 
-h.renamePhoto = (newName, callback) ->
-  files = fs.readdirSync '.'
+h.renamePhoto = (newName, pwd) ->
+  files = fs.readdirSync pwd
   files = _.select files, (file) -> 
     file.match /jpg/
   if files.length > 1
@@ -64,13 +64,11 @@ h.renamePhoto = (newName, callback) ->
   
   opts =
     filename    :  oldName
-    dir         :  '.'
-    destDir     :  '.'
+    dir         :  pwd
+    destDir     :  pwd
     destFilename:  newName
 
-  console.log opts
-
-  h.mvFile(opts, callback)
+  h.mvFile(opts) if oldName != newName
   
     
 h.sendEmail = (headers, callback) ->
