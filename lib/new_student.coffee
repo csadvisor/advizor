@@ -39,6 +39,7 @@ get_info = (callback) ->
     first : (cb) -> get_field 'enter student\'s first name: '    , cb
     last  : (cb) -> get_field 'enter student\'s last name: '     , cb
     email : (cb) -> get_field 'enter student\'s email: '         , cb
+    suid  : (cb) -> get_field 'enter student\'s suid: '          , cb
     year  : (cb) -> get_field 'enter student\'s grad year: '     , cb
     track : (cb) -> get_field 'enter student\'s intended track: ', cb
   , callback

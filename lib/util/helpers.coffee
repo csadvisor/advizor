@@ -5,6 +5,7 @@ _       = require('underscore')
 {spawn} = require('child_process')
 email   = require('emailjs')
 config  = require('../../config')
+FormData = require('form-data')
 
 h = {}
 
@@ -113,5 +114,30 @@ h.subscribeList = ({student, list}, callback) ->
     text    : "subscribing to #{list}@lists.stanford.edu"
     subject : "subscribing to #{list}"
   h.sendEmail(headers, callback)
+
+
+h.postToPhotoBoard = ({student, pwd}, callback) ->
+  console.log pwd
+  if not ('suid' of student)
+    callback("No suid field!")
+    return
+  if not fs.existsSync("#{pwd}/photo.jpg") 
+    callback("No image file!")
+    return
+  form = new FormData()
+  form.append('firstName', student.first)
+  form.append('lastName', student.last)
+  form.append('suid', student.suid)
+  form.append('image', fs.createReadStream("#{pwd}/photo.jpg"))
+  form.submit('http://169.254.223.172:3000/upload', (err, res) ->
+    # res – response object (http.IncomingMessage)
+    if err
+      callback(err)
+    else
+      res.resume()
+      callback()
+  )
+
+
 
 module.exports = h

@@ -148,4 +148,14 @@ tasks.facebookPost = ({student, message, pwd}, callback) ->
      ]
   h.sendEmail(headers, callback)
 
+# Post to photo board
+#
+# Sends the photo, name and suid to the photo board site
+# The suid is stripped from the transcript if not in info.json
+tasks.photoBoard = ({student, pwd}, callback) ->
+  debug '** Post to photo board'
+  debug pwd
+  h.postToPhotoBoard({student, pwd}, callback)
+
+
 module.exports = tasks

@@ -31,7 +31,10 @@
     "coffee-script" : "*",
     "debug": "*",
     "mkdirp": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "form-data": "*",
+    "eco": "*",
+    "graceful-fs": "2.0.3"
   },
   "devDependencies": {
     "mocha": "*",
