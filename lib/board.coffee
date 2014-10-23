@@ -10,21 +10,28 @@ mapWd = (filenames) ->
   return _.map filenames, (filename) -> wd + '/' + filename
 
 upload_photos = (callback) ->
+  errs = []
   fs.readdir '.', (err,res) ->
     students = _.map res, (dir) ->
       if not fs.lstatSync(dir).isDirectory()
         return
-      info = fs.readFileSync("#{dir}/info.json")
+      jsonFile = "#{dir}/info.json"
+      info = fs.readFileSync(jsonFile)
       info = JSON.parse(info)
+      if info.posted
+         return
       student = info.student
       dir = wd + '/' + dir
-      debug dir
-      h.postToPhotoBoard({student, pwd: dir}, (err) ->
+      post = -> h.postToPhotoBoard({student, pwd: dir}, (err) ->
         if not err
           debug "Posted #{student.first} #{student.last}"
         else
           debug err
+          errs.push err
         )
+      setTimeout post, 2000
+  debug 'ERRORS:'
+  debug err for err in errs
       
 
 module.exports = upload_photos

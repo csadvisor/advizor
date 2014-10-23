@@ -99,7 +99,7 @@ h.buildEmailBody = ({advisor, student}) ->
 
       #{student.first} #{student.last} (#{student.year}) is your new advisee. I'm attaching #{student.first}'s transcripts and photo.
 
-      Alex Eckert
+      Shayon Saleh
       CS Course Advisor
       http://bit.ly/csadvisor
     """
@@ -117,23 +117,29 @@ h.subscribeList = ({student, list}, callback) ->
 
 
 h.postToPhotoBoard = ({student, pwd}, callback) ->
-  console.log pwd
   if not ('suid' of student)
-    callback("No suid field!")
+    callback(pwd + ": no suid field!")
     return
   if not fs.existsSync("#{pwd}/photo.jpg") 
-    callback("No image file!")
+    callback(pwd + ": no image file!")
     return
   form = new FormData()
   form.append('firstName', student.first)
   form.append('lastName', student.last)
   form.append('suid', student.suid)
   form.append('image', fs.createReadStream("#{pwd}/photo.jpg"))
-  form.submit('http://169.254.223.172:3000/upload', (err, res) ->
+  form.submit('http://photomacmini.stanford.edu:3000/upload', (err, res) ->
     # res – response object (http.IncomingMessage)
     if err
       callback(err)
     else
+      # mark the student as successfully posted
+      jsonFile = "#{pwd}/info.json"
+      info = fs.readFileSync(jsonFile)
+      info = JSON.parse(info)
+      info.posted = true
+      fs.writeFileSync jsonFile, JSON.stringify info, undefined, '\t'
+
       res.resume()
       callback()
   )

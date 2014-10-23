@@ -86,6 +86,7 @@ write_info = (file, info, callback) ->
     student: info.student
     advisor: info.advisor
     message: "#{info.student.first} #{info.student.last} just declared Computer Science. "
+    posted: false
 
   fs.writeFileSync file, JSON.stringify obj, undefined, '\t'
 

@@ -1,7 +1,7 @@
-# Declarations should be processed fairly quickly. The website says
-# it may take up to two weeks to process and Meredith sometimes takes
-# up to a week to do her part, depending on how busy she is. It's best
-# if you don't wait more than a few days to do your part.
+# Declarations should be processed fairly quickly. The website says it may
+# take up to two weeks to process and Meredith sometimes takes up to a week to
+# do her part, depending on how busy she is. It's best if you don't wait more
+# than a few days to do your part.
 #
 # 1. Send the student's new advisor an e-mail informing them of the new
 #    declaree. Include their transcript and portrait in the email.

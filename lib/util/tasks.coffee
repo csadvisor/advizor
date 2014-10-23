@@ -141,7 +141,7 @@ tasks.facebookPost = ({student, message, pwd}, callback) ->
 
   headers =
      text    : message
-     to      : "trigger@ifttt.com"
+     to      : "trigger@recipe.ifttt.com"
      subject : "New CS Major"
      attachment: [
        { path: pwd + "/photo.jpg", name: "#{student.last}_#{student.first}.jpg" }
